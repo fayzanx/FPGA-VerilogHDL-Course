@@ -1,9 +1,0 @@
-module lab03part04(
-	output Q,
-	input D, Clk
-);
-	always@(posedge Clk)
-	begin
-		Q <= D;
-	end
-endmodule
