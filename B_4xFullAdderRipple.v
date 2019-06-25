@@ -4,7 +4,7 @@ module B_4xFullAdderRipple(
 	output COUT,
 	output [3:0]S
 );
-
+`
 	wire [2:0]carryAhead;
 	B_1xFullAdder sum1(A[0], B[0], CIN, carryAhead[0], S[0]);
 	B_1xFullAdder sum2(A[1], B[1], carryAhead[0], carryAhead[1], S[1]);
