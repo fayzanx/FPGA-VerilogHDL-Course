@@ -1,0 +1,34 @@
+/*	GATED D LATCH */
+module B_Mem_Dlatch(
+	output reg Q,
+	input D, clk
+);
+	always@(D, clk)
+	begin
+		if(clk)
+			Q <= D;
+	end
+endmodule
+
+/* POSITIVE EDGE TRIGGERED - D FLIP FLOP */
+module B_Mem_peDflipflop(
+	output reg Q,
+	input D, clk
+);
+	always@(posedge clk)
+	begin
+		Q <= D;
+	end
+endmodule
+
+
+/* NEGATIVE EDGE TRIGGERED - D FLIP FLOP */
+module B_Mem_neDflipflop(
+	output reg Q,
+	input D, clk
+);
+	always@(negedge clk)
+	begin
+		Q <= D;
+	end
+endmodule
