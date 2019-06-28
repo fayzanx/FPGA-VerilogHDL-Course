@@ -76,10 +76,9 @@ module counterBCD1x(
     output incNext1d,
 	input  incPrev1d, CLK1d, RESN1d
 );
-	reg resetF;
 	wire [3:0]andOut;
 	//resetF is 0 for RESN=0 OR count=1010;
-	always@(negedge CLK1d) begin
+	always@(negedge CLK) begin
 	/* I have used negative edge for storing reset of the reset flip flop,
 	 so that counter is able to  reset on next positive edge of counter clock.*/
 		if(~RESN1d) begin
@@ -120,6 +119,6 @@ module counterBCD4x(
 	input  incPrev4d, CLK4d, RESN4d
 );
 	wire incMiddle;
-	counterBCD2x count01(countVal4xBCD[7:0], incMiddle, incPrev4d, CLK4d, RESN4d);
-	counterBCD2x count23(countVal4xBCD[15:8], incNext4d, incMiddle, CLK4d, RESN4d);
+	counterBCD4x count01(countVal4xBCD[15:8], incMiddle, incPrev4d, CLK4d, RESN4d);
+	counterBCD4x count23(countVal4xBCD[ 7:0], incNext4d, incMiddle, CLK4d, RESN4d);
 endmodule

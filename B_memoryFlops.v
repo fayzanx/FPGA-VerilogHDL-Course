@@ -58,6 +58,6 @@ module lab04part01_TFlipAnd(
 	output Y, ya,
 	input  X, CLK, RESN
 );
-	mem_Tflippos calll4p1(ya, X, CLK, RESN);
+	mem_Tflippos createTflip1(ya, X, CLK, RESN);
 	assign Y = (ya & X);
 endmodule
