@@ -1,6 +1,0 @@
-module lab04part02(
-	output 
-	input  
-);
-
-endmodule

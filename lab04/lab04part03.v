@@ -2,10 +2,10 @@ module lab04part03(
 	output [15:0]LEDR,
 	output [6:0]HEX3, HEX2, HEX1, HEX0,
 	input  [1:0]SW,
-	input  KEY1
+	input  [1:1]KEY
 );
 	//CNT_EN = SW[0], S_CLR = SW[1] 
-	count1 lpmcount(KEY1, SW[0], SW[1], LEDR[15:0]);
+	count1 lpmcount(KEY[1], SW[0], SW[1], LEDR[15:0]);
 	hexDecoder7Seg h3(HEX3[6:0], LEDR[15:12]);
 	hexDecoder7Seg h2(HEX2[6:0], LEDR[11:8]);
 	hexDecoder7Seg h1(HEX1[6:0], LEDR[7:4]);

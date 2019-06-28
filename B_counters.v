@@ -1,29 +1,29 @@
 /*	4-BIT COUNTER USING T-FLIP FLOPS	*/
 module counter4x(
-	output [3:0]countVal, ANDr,
+	output [3:0]countVal4x,
+    output ANDr,
 	input  ANDl, CLK, RESN
 );
-		/*genvar i;
+	/*genvar i;
 	generate
 		//for(i=1; i<17; i=i+1) begin: m
 		for(i=1; i<5; i=i+1) begin: m
 			lab04part01_TFlipAnd (cBout[i], cBout[i-1], SW[1], SW[2]);
 		end //for
 	endgenerate*/
-
+	
 	wire [3:0]andOut;
-	lab04part01_TFlipAnd a1(andOut[0], countVal[0], ANDl,      CLK, RESN);
-	lab04part01_TFlipAnd a2(andOut[1], countVal[1], andOut[0], CLK, RESN);
-	lab04part01_TFlipAnd a3(andOut[2], countVal[2], andOut[1], CLK, RESN);
-	lab04part01_TFlipAnd a4(andOut[3], countVal[3], andOut[2], CLK, RESN);
+	lab04part01_TFlipAnd a1(andOut[0], countVal4x[0], ANDl,      CLK, RESN);
+	lab04part01_TFlipAnd a2(andOut[1], countVal4x[1], andOut[0], CLK, RESN);
+	lab04part01_TFlipAnd a3(andOut[2], countVal4x[2], andOut[1], CLK, RESN);
+	lab04part01_TFlipAnd a4(andOut[3], countVal4x[3], andOut[2], CLK, RESN);
 	assign ANDr = andOut[3];
 endmodule
 
-
-
 /*	16-BIT COUNTER USING T-FLIP FLOPS	*/
 module counter16x(
-	output [15:0]countVal, ANDr,
+	output [15:0]countVal,
+	output ANDr,
 	input  ANDl, CLK, RESN
 );
 	wire [3:0]carryOn;
@@ -34,6 +34,16 @@ module counter16x(
 	assign ANDr = carryOn[0];
 endmodule
 
+/*	32-BIT COUNTER USING T-FLIP FLOPS	*/
+module counter32x(
+	output [31:0]countVal,
+	output ANDr,
+	input  ANDl, CLK, RESN
+);
+	wire carryOn;
+	counter16x count0(countVal[15: 0], carryOn, ANDl, CLK, RESN);
+	counter16x count1(countVal[31:16], ANDr, carryOn, CLK, RESN);
+endmodule
 
 /*	16-BIT COUNTER USING +1	*/
 module counter16x_add(
@@ -49,3 +59,4 @@ module counter16x_add(
 			countVal <= countVal;
 	end //always
 endmodule
+
