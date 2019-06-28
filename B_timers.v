@@ -1,25 +1,47 @@
 
 // generate a tick after 1s using clock of 50MHz
 module clock_1s(
-	output reg [25:0]countVal,
+	//output reg [25:0]countVal,
 	output reg flagEnable,
 	input CLKcount
 );
+	reg [25:0]countVal;
 	always@(posedge CLKcount) begin
 		if(countVal == 26'd50000000) begin
 			flagEnable = 1'b1;
-			countVal <= 26'd0000000;
+			countVal <= 26'd0;
 		end //if
 		else if(countVal < 26'd50000000) begin
 			flagEnable = 1'b0;
 			countVal <= countVal + 1'b1;
 		end //else if
 		else begin
-			countVal <= 26'd5000000;
+			countVal <= 26'd0;
 		end
 	end //always
 endmodule
 
+// generates a tick after 1ms
+module clock_1ms(
+	//output reg [15:0]countVal,
+	output reg flagEnable,
+	input CLKcount
+);
+	reg [15:0]countVal;
+	always@(posedge CLKcount) begin
+		if(countVal == 16'd50000) begin
+			flagEnable = 1'b1;
+			countVal <= 16'd0;
+		end //if
+		else if(countVal < 16'd50000) begin
+			flagEnable = 1'b0;
+			countVal <= countVal + 1'b1;
+		end //else if
+		else begin
+			countVal <= 16'd0;
+		end
+	end //always
+endmodule
 
 
 /*module clock_50Mto1s(
