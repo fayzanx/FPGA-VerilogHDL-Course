@@ -3,12 +3,13 @@ module lab05part01(
 	output [15:0]outputVal,
     //input  CLOCK_50, //50MHz Clock
     input  [2:0]SW //CLR, CLK, EN
+	,output [3:0]nextSignal
 );
 
 	wire noUse;
     //counterBCD1x bcdA(outputVal, noUse, SW[0], SW[1], SW[2], rF);
 	//counterBCD2x bcdAB(outputVal, noUse, SW[0], SW[1], SW[2]);
-	counterBCD4x bcdABCD(outputVal, noUse, /*EN*/SW[0],/*CLK*/SW[1],/*RESN*/SW[2]);
+	counterBCD4d bcdABCD(outputVal, noUse, /*EN*/SW[0],/*CLK*/SW[1],/*RESN*/SW[2], nextSignal[3:0]);
     hexDecoder7Seg h3(HEX3, outputVal[15:12]);
 	hexDecoder7Seg h2(HEX2, outputVal[11:8]);
 	hexDecoder7Seg h1(HEX1, outputVal[7:4]);
@@ -20,8 +21,8 @@ module tbl5p1;
     reg [2:0]sw;
     wire [15:0]bcd;
     wire [6:0]h3, h2, h1, h0;
-	wire nu;//, rf;
-    lab05part01 testl5p1(h3, h2, h1, h0, bcd, sw);
+	wire [3:0]nextSignal;//, rf;
+    lab05part01 testl5p1(h3, h2, h1, h0, bcd, sw, nextSignal);
     integer i;
 	initial begin
 		sw[1]=1'b0;

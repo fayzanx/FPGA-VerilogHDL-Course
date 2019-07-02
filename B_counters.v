@@ -68,6 +68,8 @@ endmodule
 
 	SOLUTION:
 		Using a 4-bit counter, with reset at 10.
+
+	ISSUE: Increments the value of 9 at 90, instead of 99.
 */
 
 /*	SINGLE DIGIT BCD COUNTER USING T-FLOPS	*/
@@ -85,7 +87,7 @@ module counterBCD1x(
 		if(~RESN1d) begin
 			resetF <= 1'b0;
 		end //if
-		else if(countVal1xBCD > 4'd8) begin
+		else if(countVal1xBCD > 4'd8 && incPrev1d) begin
 			resetF <= ~resetF;
 		end //elseif
 		else begin
@@ -122,4 +124,54 @@ module counterBCD4x(
 	wire incMiddle;
 	counterBCD2x count01(countVal4xBCD[7:0], incMiddle, incPrev4d, CLK4d, RESN4d);
 	counterBCD2x count23(countVal4xBCD[15:8], incNext4d, incMiddle, CLK4d, RESN4d);
+endmodule
+
+/*	SINGLE DIGIT BCD COUNTER USING BEHAVORIAL CODING	*/
+module counterBCD1d(
+	output reg [3:0]countVal1dBCD,
+	output reg next1d, 
+	input /*prev1d,*/ CLK1d, RESN1d
+);
+	initial countVal1dBCD = 4'h0;
+	always@(posedge CLK1d) begin
+		next1d = 1'b0;
+		if(~RESN1d) begin
+			countVal1dBCD <= 4'h0;
+		end //if	
+		else if(countVal1dBCD < 4'd9) begin
+				countVal1dBCD <= countVal1dBCD + 4'h1;
+		end //elseif
+		else if(countVal1dBCD >= 4'h9) begin //reset
+			countVal1dBCD <= 4'h0;
+			next1d = 1'b1;
+		end //elseif
+	end //always
+endmodule
+
+/*	2-DIGIT BCD COUNTER: using behavorial modelling	*/
+module counterBCD2d(
+	output [7:0]countVal2dBCD,
+	output next2d,
+	input /*prev2d,*/ CLK2d, RESN2d
+	,output [1:0]next
+);
+	wire connect2;
+	counterBCD1d countA(countVal2dBCD[3:0], connect2/*, prev2d*/, CLK2d, RESN2d);
+	counterBCD1d countB(countVal2dBCD[7:4], next2d/*, connect2*/, connect2, RESN2d);
+
+	assign next[0] = connect2;
+	assign next[1] = next2d; 
+endmodule
+
+
+/*	4-DIGIT BCD COUNTER: using behavorial modelling	*/
+module counterBCD4d(
+	output [15:0]countVal4dBCD,
+	output next4d,
+	input prev4d, CLK4d, RESN4d
+	,output [3:0]next
+);
+	wire connect4;
+	counterBCD2d countA(countVal4dBCD[7:0], connect4, /*prev4d,*/ CLK4d, RESN4d, next[1:0]);
+	counterBCD2d countB(countVal4dBCD[15:8], next4d, /*connect4,*/ connect4, RESN4d, next[3:2]);
 endmodule
