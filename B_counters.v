@@ -73,58 +73,58 @@ endmodule
 */
 
 /*	SINGLE DIGIT BCD COUNTER USING T-FLOPS	*/
-module counterBCD1x(
-	output [3:0]countVal1xBCD,
-    output incNext1d,
-	input  incPrev1d, CLK1d, RESN1d
-);
-	reg resetF;
-	wire [3:0]andOut;
-	//resetF is 0 for RESN=0 OR count=1010;
-	always@(negedge CLK1d) begin
-	/* I have used negative edge for storing reset of the reset flip flop,
-	 so that counter is able to  reset on next positive edge of counter clock.*/
-		if(~RESN1d) begin
-			resetF <= 1'b0;
-		end //if
-		else if(countVal1xBCD > 4'd8 && incPrev1d) begin
-			resetF <= ~resetF;
-		end //elseif
-		else begin
-			resetF <= 1'b1;
-		end //else
-		//resetF <= ~(~RESN1d | (countVal1xBCD[3]&~countVal1xBCD[2]&countVal1xBCD[1]&~countVal1xBCD[0]));
-	end //always
-	lab04part01_TFlipAnd a1(andOut[0], countVal1xBCD[0], incPrev1d,   CLK1d, resetF);
-	lab04part01_TFlipAnd a2(andOut[1], countVal1xBCD[1], andOut[0], CLK1d, resetF);
-	lab04part01_TFlipAnd a3(andOut[2], countVal1xBCD[2], andOut[1], CLK1d, resetF);
-	lab04part01_TFlipAnd a4(andOut[3], countVal1xBCD[3], andOut[2], CLK1d, resetF);
-	assign incNext1d = ~resetF;
-endmodule
+// module counterBCD1x(
+// 	output [3:0]countVal1xBCD,
+//     output incNext1d,
+// 	input  incPrev1d, CLK1d, RESN1d
+// );
+// 	reg resetF;
+// 	wire [3:0]andOut;
+// 	//resetF is 0 for RESN=0 OR count=1010;
+// 	always@(negedge CLK1d) begin
+// 	/* I have used negative edge for storing reset of the reset flip flop,
+// 	 so that counter is able to  reset on next positive edge of counter clock.*/
+// 		if(~RESN1d) begin
+// 			resetF <= 1'b0;
+// 		end //if
+// 		else if(countVal1xBCD > 4'd8 && incPrev1d) begin
+// 			resetF <= ~resetF;
+// 		end //elseif
+// 		else begin
+// 			resetF <= 1'b1;
+// 		end //else
+// 		//resetF <= ~(~RESN1d | (countVal1xBCD[3]&~countVal1xBCD[2]&countVal1xBCD[1]&~countVal1xBCD[0]));
+// 	end //always
+// 	lab04part01_TFlipAnd a1(andOut[0], countVal1xBCD[0], incPrev1d,   CLK1d, resetF);
+// 	lab04part01_TFlipAnd a2(andOut[1], countVal1xBCD[1], andOut[0], CLK1d, resetF);
+// 	lab04part01_TFlipAnd a3(andOut[2], countVal1xBCD[2], andOut[1], CLK1d, resetF);
+// 	lab04part01_TFlipAnd a4(andOut[3], countVal1xBCD[3], andOut[2], CLK1d, resetF);
+// 	assign incNext1d = ~resetF;
+// endmodule
 
 
 /*	2-DIGIT BCD COUNTER USING 1-DIGIT BCD MODULE (T-FLOPS)	*/
-module counterBCD2x(
-	output [7:0]countVal2xBCD,
-	output incNext2d,
-	input  incPrev2d, CLK2d, RESN2d
-);
-	wire incMiddle;
-	counterBCD1x count0(countVal2xBCD[3:0], incMiddle, incPrev2d, CLK2d, RESN2d);
-	counterBCD1x count1(countVal2xBCD[7:4], incNext2d, incMiddle, CLK2d, RESN2d);
-endmodule
+// module counterBCD2x(
+// 	output [7:0]countVal2xBCD,
+// 	output incNext2d,
+// 	input  incPrev2d, CLK2d, RESN2d
+// );
+// 	wire incMiddle;
+// 	counterBCD1x count0(countVal2xBCD[3:0], incMiddle, incPrev2d, CLK2d, RESN2d);
+// 	counterBCD1x count1(countVal2xBCD[7:4], incNext2d, incMiddle, CLK2d, RESN2d);
+// endmodule
 
 
 /*	4-DIGIT BCD COUNTER USING 2-DIGIT BCD MODULE(S) [T-FLOPS]	*/
-module counterBCD4x(
-	output [15:0]countVal4xBCD,
-	output incNext4d,
-	input  incPrev4d, CLK4d, RESN4d
-);
-	wire incMiddle;
-	counterBCD2x count01(countVal4xBCD[7:0], incMiddle, incPrev4d, CLK4d, RESN4d);
-	counterBCD2x count23(countVal4xBCD[15:8], incNext4d, incMiddle, CLK4d, RESN4d);
-endmodule
+// module counterBCD4x(
+// 	output [15:0]countVal4xBCD,
+// 	output incNext4d,
+// 	input  incPrev4d, CLK4d, RESN4d
+// );
+// 	wire incMiddle;
+// 	counterBCD2x count01(countVal4xBCD[7:0], incMiddle, incPrev4d, CLK4d, RESN4d);
+// 	counterBCD2x count23(countVal4xBCD[15:8], incNext4d, incMiddle, CLK4d, RESN4d);
+// endmodule
 
 /*	SINGLE DIGIT BCD COUNTER USING BEHAVORIAL CODING	*/
 module counterBCD1d(
@@ -133,17 +133,19 @@ module counterBCD1d(
 	input /*prev1d,*/ CLK1d, RESN1d
 );
 	initial countVal1dBCD = 4'h0;
-	always@(posedge CLK1d) begin
-		next1d = 1'b0;
+	always@(posedge CLK1d or negedge RESN1d) begin
+		
 		if(~RESN1d) begin
 			countVal1dBCD <= 4'h0;
+			next1d <= 1'b0;
 		end //if	
 		else if(countVal1dBCD < 4'd9) begin
 				countVal1dBCD <= countVal1dBCD + 4'h1;
+				next1d <= 1'b0;
 		end //elseif
 		else if(countVal1dBCD >= 4'h9) begin //reset
 			countVal1dBCD <= 4'h0;
-			next1d = 1'b1;
+			next1d <= 1'b1;
 		end //elseif
 	end //always
 endmodule
@@ -152,12 +154,12 @@ endmodule
 module counterBCD2d(
 	output [7:0]countVal2dBCD,
 	output next2d,
-	input /*prev2d,*/ CLK2d, RESN2d
+	input /*prev2d,*/ CLK2d, CLR2d
 	,output [1:0]next
 );
 	wire connect2;
-	counterBCD1d countA(countVal2dBCD[3:0], connect2/*, prev2d*/, CLK2d, RESN2d);
-	counterBCD1d countB(countVal2dBCD[7:4], next2d/*, connect2*/, connect2, RESN2d);
+	counterBCD1d countA(countVal2dBCD[3:0], connect2/*, prev2d*/, CLK2d, CLR2d);
+	counterBCD1d countB(countVal2dBCD[7:4], next2d/*, connect2*/, connect2, CLR2d);
 
 	assign next[0] = connect2;
 	assign next[1] = next2d; 
@@ -168,10 +170,10 @@ endmodule
 module counterBCD4d(
 	output [15:0]countVal4dBCD,
 	output next4d,
-	input prev4d, CLK4d, RESN4d
+	input prev4d, CLK4d, CLR4d
 	,output [3:0]next
 );
 	wire connect4;
-	counterBCD2d countA(countVal4dBCD[7:0], connect4, /*prev4d,*/ CLK4d, RESN4d, next[1:0]);
-	counterBCD2d countB(countVal4dBCD[15:8], next4d, /*connect4,*/ connect4, RESN4d, next[3:2]);
+	counterBCD2d countA(countVal4dBCD[7:0], connect4, /*prev4d,*/ CLK4d, CLR4d, next[1:0]);
+	counterBCD2d countB(countVal4dBCD[15:8], next4d, /*connect4,*/ connect4, CLR4d, next[3:2]);
 endmodule
