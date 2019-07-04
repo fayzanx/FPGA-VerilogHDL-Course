@@ -11,7 +11,7 @@ module lab06part02(
     wire [2:0]y;
     assign y = 3'b000;
 
-    syncAdder #(4) addSubTest(LEDG[0], xcarry, sum, SW[7:4], SW[3:0], SW[8], CLOCK_50, opsel);
+    syncAddnSub #(4) addSubTest(LEDG[0], xcarry, sum, SW[7:4], SW[3:0], SW[8], CLOCK_50, opsel);
     hexDisplay4digit dispTest(HEX3, HEX2, HEX1, HEX0, {SW, y, xcarry, sum});
 endmodule
 

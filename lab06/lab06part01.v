@@ -7,10 +7,10 @@ module lab06part01(
     input  CLOCK_50
 );
     wire xcarry; //not used
-    
+
     wire [3:0]y;
     assign y = 4'b1010;
-    syncAdder #(4) adderTest(LEDG[0], xcarry, sum, SW[7:4], SW[3:0], SW[8], CLOCK_50, 1'b1);
+    syncAddnSub #(4) adderTest(LEDG[0], xcarry, sum, SW[7:4], SW[3:0], SW[8], CLOCK_50, 1'b1);
     hexDisplay4digit dispTest(HEX3, HEX2, HEX1, HEX0, {SW, y, sum});
 endmodule
 

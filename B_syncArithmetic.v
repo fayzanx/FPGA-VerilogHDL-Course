@@ -1,4 +1,4 @@
-module syncAdder #(parameter sAddWidth = 8)(
+module syncAddnSub #(parameter sAddWidth = 8)(
     output overflowBit,
     output carryOut,
     output [sAddWidth-1:0]sumFinal,
