@@ -107,6 +107,7 @@ module B_4xFullAdderRipple(
 	output [3:0]S
 );
     // wrapper function, retained for backward compatibility
+    wire noUse; //not used
     adderNx addEm(noUse, COUT, S, CIN, A, B);
 	/*wire [2:0]carryAhead;
 	B_1xFullAdder sum1(A[0], B[0], CIN, carryAhead[0], S[0]);
