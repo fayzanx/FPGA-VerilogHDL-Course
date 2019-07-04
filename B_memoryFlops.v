@@ -123,12 +123,12 @@ module lab04part01_TFlipAnd(
 endmodule
 
 // 8-bit Register using D flops
-module /*#(parameter regWidth=8)*/ registerNx(
+module registerNx #(parameter regWidth=8)(
 	output [regWidth-1 : 0]Q,
 	input  [regWidth-1 : 0]D,
 	input  regCLK, regRESN
 );
-	parameter regWidth=8;
+	//parameter regWidth=8;
 	genvar i;
 	generate	
 		for(i=0; i<regWidth; i=i+1) begin: m
