@@ -134,7 +134,7 @@ module addnSubX #(parameter adderWidth = 4)(
     assign carryAhead[0] = carryIn | opSelect; //for subtraction
     assign carryOut = carryAhead[adderWidth];
 
-	//adding subtraction feature
+	//adding subtraction feature, Inverting B
 	wire [adderWidth-1:0]numBx;
     genvar j;
     generate for (j=0; j<adderWidth; j=j+1) begin: n
@@ -155,4 +155,31 @@ endmodule
 
 
 // Multiplier
-//module 
+module multiplierNx #(parameter MULSize = 2)(
+	//output [((2*MULSize))-1:0]mulAns,
+	//output [(MULSize-1):0]mulInt[((2*MULSize)-1):0],
+	output reg [((MULSize*MULSize)-1):0]mulInt,
+	input  [(MULSize-1):0]numA, numB
+);
+	//addnSubX #(2*MULSize) adder1(noUseov, noUsecout, );
+
+	//generating the multiplied array of both numbers
+	//wire [(MULSize-1):0]mulInt[((2*MULSize)-1):0];
+	integer i,j;
+	always@(*) begin
+		for(i=0; i<MULSize; i=i+1) begin
+			for(j=0; j<MULSize; j=j+1) begin
+					mulInt[(i*MULSize)+j] = (numA[j] & numB[i]);
+			end
+		end
+	end
+
+	/*wire [(MULSize+1):0]carryAhead;
+	wire [(MULSize-1):0]sumAhead;
+
+	assign sumAhead[0] = {1'b0,mulInt[0]};
+	//summing up the array to generate final answer
+	addnSubX #(MULSize) adder1(.overflowFlag(noUse1), .carryOut(carryAhead[i+1]), .SUM(sumAhead[i+1]),
+	 .carryIn(carryAhead[i]), .numA(sumAhead[i+1]), .numB({mulInt[i+1], 1'b0}), .opSelect(1'b0));*/
+
+endmodule

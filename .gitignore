@@ -28,3 +28,6 @@ $RECYCLE.BIN/
 Creating a new project Quartus II.pdf
 DE1_UserManual_v1017.pdf
 Using ModelSim with Quartus II.pdf
+
+#Ignore Altera generated backup files
+*.bak

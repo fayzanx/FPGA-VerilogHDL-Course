@@ -13,13 +13,6 @@ module syncAddnSub #(parameter sAddWidth = 8)(
     wire [sAddWidth-1:0]savedA, savedB, savedSum;
     wire saveOverflow;
     
-    wire [sAddWidth-1:0]numBx;
-    
-    // genvar i;
-    // generate for (i=0; i<sAddWidth; i=i+1) begin: m
-    //     assign numBx[i] = opSelect ^ numB[i];
-    // end endgenerate
-
     // sync input
     registerNx #(sAddWidth) saveNumA(savedA, numA, adderClock, resetNeg);
     registerNx #(sAddWidth) saveNumB(savedB, numB, adderClock, resetNeg);
