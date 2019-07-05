@@ -1,3 +1,4 @@
+// SYNChronous Adder & Subtractor [TIME: 2 CYCLES]
 module syncAddnSub #(parameter sAddWidth = 8)(
     output overflowBit,
     output carryOut,
@@ -23,4 +24,23 @@ module syncAddnSub #(parameter sAddWidth = 8)(
     // sync output
     registerNx #(sAddWidth) savemySumAB(sumFinal, savedSum, adderClock, resetNeg);
     registerNx #(1) overFlowSync(overflowBit, saveOverflow, adderClock, resetNeg);
+endmodule
+
+// SYNChronous Multiplier. [TIME: 2 CYCLES]
+module syncMultiplierNx #(parameter mulWidth=4)(
+    output [((2*mulWidth)-1):0]sMUL,
+    input  [(mulWidth-1):0]numA, numB,
+    input  mulClock, resetN
+);
+    // synchronizing the inputs
+    wire [(mulWidth-1):0]numAs, numBs;
+    registerNx #(mulWidth) mulA(numAs, numA, mulClock, resetN);
+    registerNx #(mulWidth) mulB(numBs, numB, mulClock, resetN);
+    
+    // doing the operation
+    wire [((2*mulWidth)-1):0]MUL;
+    multiplierNx #(mulWidth) mulAB(MUL, numAs, numBs);
+
+    // synchronizing the final result
+    registerNx #(2*mulWidth) syncFinal(sMUL, MUL, mulClock, resetN);
 endmodule

@@ -159,6 +159,7 @@ module multiplierNx #(parameter MULSize = 2)(
 	output [((2*MULSize))-1:0]mulAns,
 	input  [(MULSize-1):0]numA, numB
 );
+	wire [(MULSize-1):0]noUse;
 	// Intermediates
 	wire [((2*MULSize)-1):0]sumIntermediate[(MULSize):0];
 	reg  [((2*MULSize)-1):0]mulIntermediate[(MULSize):0];
@@ -189,7 +190,7 @@ module multiplierNx #(parameter MULSize = 2)(
 	// Summing up the array to generate final answer
 	genvar k;
 	generate for(k=0; k<MULSize; k=k+1) begin: o
-		addnSubX #(2*MULSize) adder1(.carryOut(carryAhead[k+1]),
+		addnSubX #(2*MULSize) adder1(.overflowFlag(noUse[k]), .carryOut(carryAhead[k+1]),
 			.SUM(sumIntermediate[k+1]),	.carryIn(carryAhead[k]), .numA(sumIntermediate[k]),
 			.numB(mulIntermediate[k+1]), .opSelect(1'b0));
 	end	endgenerate

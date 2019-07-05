@@ -11,7 +11,7 @@ module lab06part05(
 	assign LEDG[7:0] = ans;
 endmodule
 
-module tbtest;
+module tbtestl6p5;
     reg [6:0]h1,h0;
     reg [3:0]a,b;
     wire [7:0]ans;
