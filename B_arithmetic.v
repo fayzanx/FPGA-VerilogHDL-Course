@@ -114,7 +114,6 @@ module B_4xFullAdderRipple(
 	B_1xFullAdder sum2(A[1], B[1], carryAhead[0], carryAhead[1], S[1]);
 	B_1xFullAdder sum3(A[2], B[2], carryAhead[1], carryAhead[2], S[2]);
 	B_1xFullAdder sum4(A[3], B[3], carryAhead[2], COUT, S[3]);*/
-	
 endmodule
 
 // A generic N-Bit Adder
@@ -125,21 +124,22 @@ module addnSubX #(parameter adderWidth = 4)(
     input  carryIn,
     input  [adderWidth-1:0]numA, numB,
 	input opSelect
-);
-    //parameter adderWidth = 4;
-
+);	// parameter adderWidth = 4;
+    
     // carry ahead logic
-    wire [adderWidth:0]carryAhead;
 	//.. ISSUE: carryIn should be removed from portIN.
+    wire [adderWidth:0]carryAhead;
     assign carryAhead[0] = carryIn | opSelect; //for subtraction
     assign carryOut = carryAhead[adderWidth];
 
-	//adding subtraction feature, Inverting B
+	// adding subtraction feature, Inverting B
 	wire [adderWidth-1:0]numBx;
     genvar j;
-    generate for (j=0; j<adderWidth; j=j+1) begin: n
-        assign numBx[j] = opSelect ^ numB[j];
-    end endgenerate
+    generate 
+		for (j=0; j<adderWidth; j=j+1) begin: n
+			assign numBx[j] = opSelect ^ numB[j];
+		end
+	endgenerate
 
     // main block
     genvar i;
@@ -156,30 +156,41 @@ endmodule
 
 // Multiplier
 module multiplierNx #(parameter MULSize = 2)(
-	//output [((2*MULSize))-1:0]mulAns,
-	//output [(MULSize-1):0]mulInt[((2*MULSize)-1):0],
-	output reg [((MULSize*MULSize)-1):0]mulInt,
+	output [((2*MULSize))-1:0]mulAns,
 	input  [(MULSize-1):0]numA, numB
 );
-	//addnSubX #(2*MULSize) adder1(noUseov, noUsecout, );
+	// Intermediates
+	wire [((2*MULSize)-1):0]sumIntermediate[(MULSize):0];
+	reg  [((2*MULSize)-1):0]mulIntermediate[(MULSize):0];
+	wire [(MULSize+1):0]carryAhead;
 
-	//generating the multiplied array of both numbers
-	//wire [(MULSize-1):0]mulInt[((2*MULSize)-1):0];
+	// Generating the multiplied array of both numbers
 	integer i,j;
 	always@(*) begin
-		for(i=0; i<MULSize; i=i+1) begin
-			for(j=0; j<MULSize; j=j+1) begin
-					mulInt[(i*MULSize)+j] = (numA[j] & numB[i]);
+		// Initiating to zero, to avoid X.
+		for(i=0; i<(MULSize); i=i+1) begin
+			for (j=0; j<(2*MULSize); j=j+1) begin
+					mulIntermediate[i][j] = 0;
 			end
 		end
-	end
+		// Generating Multiplicands
+		for(i=0; i<MULSize; i=i+1) begin
+			for(j=0; j<MULSize; j=j+1) begin
+					mulIntermediate[i][i+j] = (numA[j] & numB[i]);
+			end
+		end
+	end //always block
 
-	/*wire [(MULSize+1):0]carryAhead;
-	wire [(MULSize-1):0]sumAhead;
+	// preseting for algo
+	assign carryAhead[0] = 0;
+	assign sumIntermediate[0] = mulIntermediate[0];
+	assign mulAns = sumIntermediate[MULSize-1];
 
-	assign sumAhead[0] = {1'b0,mulInt[0]};
-	//summing up the array to generate final answer
-	addnSubX #(MULSize) adder1(.overflowFlag(noUse1), .carryOut(carryAhead[i+1]), .SUM(sumAhead[i+1]),
-	 .carryIn(carryAhead[i]), .numA(sumAhead[i+1]), .numB({mulInt[i+1], 1'b0}), .opSelect(1'b0));*/
-
+	// Summing up the array to generate final answer
+	genvar k;
+	generate for(k=0; k<MULSize; k=k+1) begin: o
+		addnSubX #(2*MULSize) adder1(.carryOut(carryAhead[k+1]),
+			.SUM(sumIntermediate[k+1]),	.carryIn(carryAhead[k]), .numA(sumIntermediate[k]),
+			.numB(mulIntermediate[k+1]), .opSelect(1'b0));
+	end	endgenerate
 endmodule
