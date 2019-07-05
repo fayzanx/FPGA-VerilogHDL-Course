@@ -15,17 +15,17 @@ module syncAddnSub #(parameter sAddWidth = 8)(
     
     wire [sAddWidth-1:0]numBx;
     
-    genvar i;
-    generate for (i=0; i<sAddWidth; i=i+1) begin: m
-        assign numBx[i] = opSelect ^ numB[i];
-    end endgenerate
+    // genvar i;
+    // generate for (i=0; i<sAddWidth; i=i+1) begin: m
+    //     assign numBx[i] = opSelect ^ numB[i];
+    // end endgenerate
 
     // sync input
     registerNx #(sAddWidth) saveNumA(savedA, numA, adderClock, resetNeg);
-    registerNx #(sAddWidth) saveNumB(savedB, numBx, adderClock, resetNeg);
+    registerNx #(sAddWidth) saveNumB(savedB, numB, adderClock, resetNeg);
 
     // do ADD operation
-    adderNx #(sAddWidth) addAandB(saveOverflow, carryOut, savedSum, opSelect, savedA, savedB);
+    addnSubX #(sAddWidth) addAandB(saveOverflow, carryOut, savedSum, opSelect, savedA, savedB, opSelect);
 
     // sync output
     registerNx #(sAddWidth) savemySumAB(sumFinal, savedSum, adderClock, resetNeg);

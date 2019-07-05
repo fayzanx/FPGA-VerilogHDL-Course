@@ -108,7 +108,7 @@ module B_4xFullAdderRipple(
 );
     // wrapper function, retained for backward compatibility
     wire noUse; //not used
-    adderNx addEm(noUse, COUT, S, CIN, A, B);
+    addnSubX addEm(noUse, COUT, S, CIN, A, B, 1'b0);
 	/*wire [2:0]carryAhead;
 	B_1xFullAdder sum1(A[0], B[0], CIN, carryAhead[0], S[0]);
 	B_1xFullAdder sum2(A[1], B[1], carryAhead[0], carryAhead[1], S[1]);
@@ -118,25 +118,34 @@ module B_4xFullAdderRipple(
 endmodule
 
 // A generic N-Bit Adder
-module adderNx #(parameter adderWidth = 4)(
+module addnSubX #(parameter adderWidth = 4)(
     output overflowFlag,
     output carryOut,
     output [adderWidth-1:0]SUM,
     input  carryIn,
-    input  [adderWidth-1:0]numA, numB
+    input  [adderWidth-1:0]numA, numB,
+	input opSelect
 );
     //parameter adderWidth = 4;
 
     // carry ahead logic
     wire [adderWidth:0]carryAhead;
-    assign carryAhead[0] = carryIn;
+	//.. ISSUE: carryIn should be removed from portIN.
+    assign carryAhead[0] = carryIn | opSelect; //for subtraction
     assign carryOut = carryAhead[adderWidth];
+
+	//adding subtraction feature
+	wire [adderWidth-1:0]numBx;
+    genvar j;
+    generate for (j=0; j<adderWidth; j=j+1) begin: n
+        assign numBx[j] = opSelect ^ numB[j];
+    end endgenerate
 
     // main block
     genvar i;
     generate
         for(i=0; i<adderWidth; i=i+1) begin: m
-            B_1xFullAdder sumEmAll(numA[i], numB[i], carryAhead[i], carryAhead[i+1], SUM[i]);
+            B_1xFullAdder sumEmAll(numA[i], numBx[i], carryAhead[i], carryAhead[i+1], SUM[i]);
         end//for
     endgenerate
 
@@ -145,5 +154,5 @@ module adderNx #(parameter adderWidth = 4)(
 endmodule
 
 
-
-
+// Multiplier
+//module 
