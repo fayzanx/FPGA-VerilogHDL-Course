@@ -56,6 +56,7 @@ endmodule
 endmodule*/
 
 // 7 Segment Decoder [0-F]
+// Instantiation: hexDecoder7Seg(.SevenSeg(), .X());
 module hexDecoder7Seg(
 	output [6:0]SevenSeg,
 	input  [3:0]X
@@ -73,6 +74,7 @@ endmodule
 
 
 // A helper function to display 16 bit value on HEX Displays
+// Instantiation: hexDisplay4digit(.d3(), .d2(), .d1(), .d0(), .displayVal());
 module hexDisplay4digit(
 	output [6:0]d3, d2, d1, d0,
 	inout  [15:0]displayVal

@@ -123,6 +123,7 @@ module lab04part01_TFlipAnd(
 endmodule
 
 // 8-bit Register using D flops
+// Instantiation: registerNx #(width) name(.Q(), .D(), .regCLK(), .regRESN());
 module registerNx #(parameter regWidth=8)(
 	output [regWidth-1 : 0]Q,
 	input  [regWidth-1 : 0]D,
