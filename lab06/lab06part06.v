@@ -13,7 +13,7 @@ module lab06part06(
     
 endmodule
 
-module tbtest;
+module tbtestl6p6;
     wire [6:0]h1,h0;
     reg  [3:0]a,b;
     wire [7:0]ans;
