@@ -45,7 +45,7 @@ module lab06part08(
 
 endmodule
 
-module tbtest;
+module tbtestl6p8;
     reg  clk, reset, writeEn, dataSel;
     reg  [3:0]dataA, dataB;
     wire [8:0]res;
