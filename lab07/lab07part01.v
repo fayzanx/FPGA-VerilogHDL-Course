@@ -1,22 +1,24 @@
 module lab07part01(
     output [0:0]LEDR, //output
-    output [8:0]mem,
     input  [0:0]SW,  //userInput
     input  [3:2]KEY //CLK+RESET
 );
-    FSM_4xSequenceIdenticalDetect testFSM(LEDR[0], mem, SW[0], ~KEY[3], KEY[2]);
+    FSM_4xSequenceIdenticalDetect testFSM(LEDR[0], SW[0], ~KEY[3], KEY[2]);
 endmodule
 
 module tbtest;
     reg in, clk, rst;
     wire out;
-    wire [8:0]mem;
-    lab07part01 verifyl7p1(out,mem, in, {clk, rst});
+    lab07part01 verifyl7p1(out, in, {clk, rst});
 
     initial begin
         rst = 1'b1; #50;
         rst = 1'b0; #50;
         rst = 1'b1;
+    end
+    
+    initial begin
+
         clk = 1'b0;
         forever #25 clk = ~clk;
     end

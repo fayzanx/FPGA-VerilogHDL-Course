@@ -8,13 +8,14 @@
     Instantiation: FSM_4xSequenceIdenticalDetect name(.fOut(), .W(), .pCLK(), .nREST()); */
 module FSM_4xSequenceIdenticalDetect(
     output fOut, 
-    output reg [8:0]Q,
+    //output reg [8:0]Q,
     input W/*input*/, pCLK, nREST
 );
-	 //reg [8:0]Q;
+	reg [8:0]Q;
     always@(posedge pCLK or negedge nREST) begin
         if(~nREST) begin
-            Q[8:0] <= 9'd0;
+            //RESET state = A [0 0000 0001]
+            Q[8:0] <= 9'b000000001;
         end//if
         else begin
             Q[0] <= 0;  
