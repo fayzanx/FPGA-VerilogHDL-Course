@@ -1,15 +1,17 @@
 module lab07part02(
     output [0:0]LEDR, //output
+    //output [3:0]memData,
     input  [0:0]SW,  //userInput
     input  [3:2]KEY //CLK+RESET
 );
-    FSM_4xSequenceDetectorB testFSM(LEDR[0], SW[0], ~KEY[3], KEY[2]);
+    FSM_4xSequenceDetectorB testFSM(LEDR[0], /*memData*/, SW[0], ~KEY[3], KEY[2]);
 endmodule
 
 module tbtest;
     reg in, clk, rst;
     wire out;
-    lab07part02 verifyl7p2(out, in, {clk, rst});
+    //wire [3:0]mem;
+    lab07part02 verifyl7p2(out, /*mem*/, in, {clk, rst});
 
     initial begin
         rst = 1'b1; #50;

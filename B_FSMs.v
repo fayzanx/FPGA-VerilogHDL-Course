@@ -59,25 +59,25 @@ module FSM_4xSequenceIdenticalDetect(
 endmodule
 
 
-/*
+/* --------------------------------------------------------------------------
 A modified style coding of the above module
 Instantiation: FSM_4xSequenceDetectorB name(.fOut(), .W(), .pCLK(), .nREST());
 */
 module FSM_4xSequenceDetectorB(
-    output fOut, 
-    //output reg [8:0]Q,
+    output reg fOut, 
+    //output [3:0]fQ,
     input W/*input*/, pCLK, nREST
 );
     // STATE ASSIGNMENT LIST as parameters
     parameter A = 4'b0000;
     parameter B = 4'b0001;
     parameter C = 4'b0010;
-    parameter D = 4'b0100;
-    parameter E = 4'b0101;
-    parameter F = 4'b0110;
-    parameter G = 4'b0111;
-    parameter H = 4'b1000;
-    parameter I = 4'b1001;
+    parameter D = 4'b0011;
+    parameter E = 4'b0100;
+    parameter F = 4'b0101;
+    parameter G = 4'b0110;
+    parameter H = 4'b0111;
+    parameter I = 4'b1000;
     // ----------------------------------
 
     wire [3:0]fQ;
@@ -103,7 +103,7 @@ module FSM_4xSequenceDetectorB(
             5'b01111: fD = I;
             5'b10000: fD = B;
             5'b10001: fD = I;
-            default:  fD = A;
+            default:  fD = A; 
         endcase
     end //always
 
