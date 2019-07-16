@@ -131,9 +131,27 @@ module registerNx #(parameter regWidth=8)(
 );
 	//parameter regWidth=8;
 	genvar i;
-	generate	
+	generate
 		for(i=0; i<regWidth; i=i+1) begin: m
 			mem_Dflippos df(Q[i], D[i], regCLK, regRESN);
+		end //for
+	endgenerate
+endmodule
+
+// 4-bit shift register using D flip flops
+// Instantiation: shiftRegisterNx #(width) name(.Q(), .D(), .sregCLK(), .sregRESN());
+module shiftRegisterNx #(parameter regWidth=4) (
+	output [(regWidth-1):0]Q,
+	input  D,
+	input  sregCLK, sregRESN
+);
+	wire [(regWidth):0]shiftAhead;
+	assign shiftAhead[0] = D;
+	assign Q[(regWidth-1):0] = shiftAhead[(regWidth):1];
+	genvar i;
+	generate
+		for(i=0; i<regWidth; i=i+1) begin: m
+			mem_Dflippos df(shiftAhead[i+1], shiftAhead[i], sregCLK, sregRESN);
 		end //for
 	endgenerate
 endmodule

@@ -5,7 +5,7 @@
 */
 
 /*  [L7P1] 4-bit sequence Detector [0000 or 1111]
-    Instantiation: FSM_4xSequenceIdenticalDetect name(.fOut(), .W(), .pCLK(), .nREST());
+    Instantiation: FSM_4xSequenceDetectorA name(.fOut(), .W(), .pCLK(), .nREST());
 ----------------------------------------------------------------------------------------
     + Updated for part b:
     ......STATE.TABLE..........
@@ -32,7 +32,7 @@
     ][ H | 0 1000 0001 || B | 0 0000 0011 || I | 1 0000 0001 ][
     ][ I | 1 0000 0001 || B | 0 0000 0011 || I | 1 0000 0001 ][
     -+---+-------------++---+-------------++---+-------------+                */
-module FSM_4xSequenceIdenticalDetect(
+module FSM_4xSequenceDetectorA(
     output fOut, 
     //output reg [8:0]Q,
     input W/*input*/, pCLK, nREST
@@ -62,7 +62,7 @@ endmodule
 /* --------------------------------------------------------------------------
 A modified style coding of the above module
 Instantiation: FSM_4xSequenceDetectorB name(.fOut(), .W(), .pCLK(), .nREST());
-*/
+-------------------------------------------------------------------------- */
 module FSM_4xSequenceDetectorB(
     output reg fOut, 
     //output [3:0]fQ,
@@ -118,5 +118,23 @@ module FSM_4xSequenceDetectorB(
             default: fOut = 1'b0;
         endcase
     end
+endmodule
 
+// Redesgin: a third time using shift registers
+module FSM_4xSequenceDetectorC(
+    output reg fOut, 
+    //output [3:0]shiftRegA, shiftRegB,
+    input W/*input*/, pCLK, nREST
+);
+    wire [3:0]shiftRegA, shiftRegB;
+    shiftRegisterNx #(4) detect0(.Q(shiftRegA), .D(~W), .sregCLK(pCLK), .sregRESN(nREST));
+    shiftRegisterNx #(4) detect1(.Q(shiftRegB), .D(W), .sregCLK(pCLK), .sregRESN(nREST));
+    // the input to zero detector is negated, in order to avoid false positive at RESET.
+    always@(*) begin
+        if(shiftRegA == 4'b1111 | shiftRegB == 4'b1111) begin
+            fOut = 1'b1;
+        end else begin
+            fOut = 1'b0;
+        end
+    end
 endmodule
