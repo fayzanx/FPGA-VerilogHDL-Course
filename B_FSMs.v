@@ -108,7 +108,7 @@ module FSM_4xSequenceDetectorB(
     end //always
 
     // set aside 4 positive edge triggered low async reset flip flops
-    registerNx #(4) name(.Q(fQ[3:0]), .D(fD[3:0]), .regCLK(pCLK), .regRESN(nREST)); 
+    registerNx #(4) ffx4(.Q(fQ[3:0]), .D(fD[3:0]), .regCLK(pCLK), .regRESN(nREST)); 
 
     // output control
     always@(*) begin
