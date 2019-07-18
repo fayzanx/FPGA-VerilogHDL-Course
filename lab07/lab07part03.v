@@ -7,7 +7,7 @@ module lab07part03(
     FSM_4xSequenceDetectorC testFSM(LEDR[0], /*memDataA, memDataB,*/ SW[0], ~KEY[3], KEY[2]);
 endmodule
 
-module tbtest;
+module tbtestl7p3;
     reg in, clk, rst;
     wire out;
     // wire [3:0]memA, memB;
