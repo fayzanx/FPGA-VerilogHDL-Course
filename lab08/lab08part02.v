@@ -1,6 +1,6 @@
 module lab08part02(
     output [6:0]HEX3, HEX2, HEX1, HEX0,
-    output [0:0]LEDDG,
+    output [0:0]LEDG,
     input  [13:0]SW,
     input  [3:3]KEY
 );

@@ -155,3 +155,23 @@ module shiftRegisterNx #(parameter regWidth=4) (
 		end //for
 	endgenerate
 endmodule
+
+
+// A generic RAM module for memory without lpm
+// Instantiation: genericRAM #(dataW, addrW) ram_inst(.Q(), .dataIN(), .addr(), .pCLK(), .enWR());
+module genericRAM #(parameter dataW = 8, parameter addrW = 5) (
+	output [(dataW-1):0]Q,
+	input  [(dataW-1):0]dataIN,
+	input  [(addrW-1):0]addr,
+	input  pCLK, enWR
+);
+	reg [(dataW-1):0]storageData[((2**addrW)-1):0];
+	reg [(addrW-1):0]storageAddr;
+	always@(posedge pCLK) begin
+		if(enWR == 1'b1) begin
+			storageData[addr] <= dataIN;
+		end
+			storageAddr <= addr;
+	end
+	assign Q = storageData[storageAddr];
+endmodule

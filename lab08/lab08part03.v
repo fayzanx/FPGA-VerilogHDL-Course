@@ -1,20 +1,19 @@
-module lab08part01(
+module lab08part03(
 	output [7:0]q,
 	input  [7:0]data,
 	input  [4:0]addr,
 	input  clk, wren
 );
-
-	lpmRAM1port	myRAM (addr, clk, data, wren, q);
-
+    genericRAM #(8, 5) ram_inst(.Q(q), .dataIN(data), .addr(addr), .pCLK(clk), .enWR(wren));
 endmodule
 
-module tbtestl8p1;
+
+module tbtest;
 	reg  [4:0]addr;
 	reg  wren, clk;
 	reg  [7:0]data;
 	wire [7:0]q;
-	lab08part01 testl8p1(q, data, addr, clk, wren);
+	lab08part03 testl8p1(q, data, addr, clk, wren);
 
 	initial begin
 		clk = 1'b0;
