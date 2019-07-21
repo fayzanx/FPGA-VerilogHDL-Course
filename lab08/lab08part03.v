@@ -8,7 +8,7 @@ module lab08part03(
 endmodule
 
 
-module tbtest;
+module tbtestl8p3;
 	reg  [4:0]addr;
 	reg  wren, clk;
 	reg  [7:0]data;
